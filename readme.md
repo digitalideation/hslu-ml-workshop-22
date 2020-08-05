@@ -1,33 +1,40 @@
-![iart logo](https://raw.githubusercontent.com/iartag/hek-ml-workshop/master/docs/assets/images/iart-logo.png "iart logo")
+![di logo](https://raw.githubusercontent.com/digitalideation/hslu-ml-workshop/master/docs/assets/images/di-logo-small.jpg "di logo")
 
 
-# iart AI session and H3K ML workshop 
+# HSLU AI session 
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/iartag)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/webslides/webslides.svg?style=social)](https://twitter.com/digideation)
 
-Main repository for the internal AI session @iart and the public H3K ML workshop.
+Main repository for the HSLU ML session @digitalideation.
 
 All the info regarding the workshop as well as direct links to learning materials (slides, notebooks, examples, etc... ) are accessible via the github pages for this repository:
 
-https://iartag.github.io/hek-ml-workshop/
+https://digitalideation.github.io/hslu-ml-workshop/
 
 
 ## Schedule
 
-* 11am - Start :smiley_cat:
-* 11am - Introduction 
+### 07.09
+* 9am - Start :smiley_cat:
+* 9am - Introduction 
+* 10am - Software setup + intro to tools
+* 11am - Experiments
 * 12pm - Lunch
-* 12.45pm - Software setup
-* 1.15pm - Experiments
-* 3.15 - Presentation
-* 4pm - End :crying_cat_face:
+* 1pm - Experiments
+* 5pm - End
+
+### 08.09
+* 9am - Experiments
+* 12pm - Lunch
+* 1pm - Experiments
+* 4pm - Showcase
+* 5pm - End :crying_cat_face:
 
 
 ## Slides
 
-1. [Slides for the ML workshop](https://iartag.github.io/hek-ml-workshop/slides/presentation02.html)
-2. [~~Slides for the internal presentation at iart~~](https://iartag.github.io/hek-ml-workshop/slides/presentation01.html)
+1. [Slides for the ML workshop](https://digitalideation.github.io/hslu-ml-workshop/slides/)
 
 
 ## Samples
@@ -53,14 +60,14 @@ The sample folder contains different examples:
 ## Tools
 
 #### System requirement
-Modern machine with decent hardware and sufficient space on the hard drive (20+ Gb)
+_"Modern"_ machine with decent hardware and sufficient space on the hard drive (20+ Gb is good)
 
 #### Runway
 We are using [__Runway__](https://runwayapp.ai), a tool which makes deploying ML models easy, as middleware to build the interactive experiments. All participants to the workshop should have received an invitations with some GPU credits :tada:. For those who have not installed it prior to the workshop, we will go through the [installation process](https://docs.runwayml.com/#/getting-started/installation) together.
 
 
 #### Docker
-[__Docker__](https://www.docker.com/) is needed in order to deploy some of the models locally. This will give us some flexibility when running experiments locally. It will also allow us to _chain_ models (at the moment a user can only run one model instance using the provided cloud GPU in Runway). A guide to getting started is [available](https://docs.runwayml.com/#/getting-started/installation?id=download-docker). For linux users, those [post install steps](https://docs.docker.com/install/linux/linux-postinstall/) could be useful as well.
+[__Docker__](https://www.docker.com/) will eventually be needed in order to deploy some of the models locally. This will give us some flexibility when running experiments on our machine. A guide to getting started is [available](https://docs.runwayml.com/#/getting-started/installation?id=download-docker). For linux users, those [post install steps](https://docs.docker.com/install/linux/linux-postinstall/) could be useful as well.
 
 > Docker for Windows requires Microsoft Hyper-V, which is supported only in the Pro, Enterprise or Education editions of Windows. If you don't have a Pro, Enterprise or Education Windows edition you will not be able to install Docker and you will be able to only run some models using cloud GPU.
 
@@ -83,7 +90,8 @@ If you don’t have a code editor, please install one. Some suggestions (in no p
 
 
 #### Web server
-We need a simple web server to run the experiments locally. Some suggestions 
+We need a simple web server to interact with the models locally. 
+- The easiest is probably to use Python's [SimpleHTTPServer](https://github.com/lmccart/itp-creative-js/wiki/SimpleHTTPServer). Type in Terminal:```python -m SimpleHTTPServer``` or if you are using Python 3, type:```python -m http.server```
 - If you have node.js/npm installed you can use _live-server_: `npm install -g live-server`
 - [Other recommended options](https://github.com/processing/p5.js/wiki/Local-server)
 
