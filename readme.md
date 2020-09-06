@@ -71,13 +71,20 @@ _"Modern"_ machine with decent hardware and sufficient space on the hard drive (
 If you don’t have a code editor, please install one. Some suggestions (in no particular order)
 - [Sublime Text](https://www.sublimetext.com)
 - [Visual Studio](https://code.visualstudio.com)
-- [Atom](https://atom.io) 
+- [Atom](https://atom.io)
+- [Brackets](http://brackets.io/)
 
 #### Web server
-We need a simple web server to interact with the models locally. 
-- The easiest is to use Python's [SimpleHTTPServer](https://github.com/lmccart/itp-creative-js/wiki/SimpleHTTPServer). Type in Terminal:```python -m SimpleHTTPServer``` or if you are using Python 3, type:```python -m http.server```
+We need a simple web server to interact with the models locally:
+- If you're using __Mac OS__ or __Linux__ The easiest is to use Python's [SimpleHTTPServer](https://github.com/lmccart/itp-creative-js/wiki/SimpleHTTPServer). In Terminal type:
+  * ```python --version``` to get your python version then
+  * ```python -m http.server``` if you have Python version 3
+  * ```python -m SimpleHTTPServer``` if you have Python version 2
+- If you're using __Windows__ then the easiest is probably to use [Web server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb/)
+  * Install the extension
+  * Choose the folder to be the root of the `hslu-ml-workshop` directory 
 - If you have node.js/npm installed you can use _live-server_: `npm install -g live-server`
-- [Other recommended options](https://github.com/processing/p5.js/wiki/Local-server)
+- [Other options](https://github.com/processing/p5.js/wiki/Local-server)
 
 #### Runway
 We are using [__Runway__](https://runwayapp.ai), a tool which makes deploying ML models easy, as middleware to build the interactive experiments. All participants to the workshop should have received an invitations with some GPU credits :tada:. For those who have not installed it prior to the workshop, we will go through the [installation process](https://docs.runwayml.com/#/getting-started/installation) together.
