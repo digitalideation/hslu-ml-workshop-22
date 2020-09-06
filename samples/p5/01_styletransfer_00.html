@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="js/p5.min.js"></script>
+    <script src="js/p5.dom.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+    <!-- Source -->
+    <script>
+    // Variables
+    const RUNWAY_HOST = 'http://localhost';
+    const STYLETRANSFER_PORT = 3000;
+    const model = new RunwayModel(RUNWAY_HOST + ":" + STYLETRANSFER_PORT);
+    let imageFromModel;
+    let video;
+
+    // Default P5 setup function
+    function setup() {
+        canvas = createCanvas(windowWidth, windowHeight);
+        video = createCapture(VIDEO);
+        video.hide();
+    }
+
+    // Default P5 draw loop function 
+    function draw() {
+        image(video, 0, 0, width / 2, height);
+        if (imageFromModel) {
+            image(imageFromModel, width / 2, 0, width / 2, height);
+        }
+    }
+
+    // We need to specify which function to call each time we receive an output from the model
+    model.output(dataReceived);
+
+    // This function is called when we receive data from the model
+    function dataReceived(data) {
+        console.log('[styleTransfer] Received an image');
+        imageFromModel = loadImage(data.stylizedImage);
+        // sendData();
+    }
+
+    // Send the current video image to the model
+    function sendData() {
+        video.loadPixels();
+        const img = video.get();
+        const contentImage = img.canvas.toDataURL("image/jpeg");
+        model.input({ contentImage });
+    }
+
+    function keyReleased() {
+        if (keyCode === ENTER) {
+            sendData();
+        }
+    }
+    </script>
+</body>
+
+</html>

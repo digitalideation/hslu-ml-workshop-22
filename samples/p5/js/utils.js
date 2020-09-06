@@ -18,6 +18,11 @@ const utils = {
         }
     },
 
+    // Encode a P5 image to B64
+    encodeImage(img) {
+        return img.canvas.toDataURL("image/jpeg")
+    },
+
     // Capture and encode canvas
     captureAndEncodeCanvas(capture) {
         tint(255)

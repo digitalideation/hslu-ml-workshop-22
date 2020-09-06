@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="js/p5.min.js"></script>
+    <script src="js/p5.dom.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+    <!-- Source -->
+    <script>
+    // Variables
+    const RUNWAY_HOST = 'http://localhost';
+    const STYLETRANSFER_PORT = 3000;
+    const model = new RunwayModel(RUNWAY_HOST + ":" + STYLETRANSFER_PORT);
+    let imageFromModel;
+    let video;
+    let options = {
+        color: [0, 255, 122],
+        size: 10,
+    };
+
+    // Add GUI to the window
+    window.onload = function() {
+        let gui = new dat.GUI();
+        gui.addColor(options, 'color');
+        gui.add(options, 'size').min(1).max(50).step(1).listen();
+    };
+
+    // Default P5 setup function 
+    function setup() {
+        canvas = createCanvas(windowWidth, windowHeight);
+        video = createCapture(VIDEO);
+        video.hide();
+    }
+
+    // Default P5 draw loop function 
+    function draw() {
+        fill(options.color);
+        noStroke();
+        rectMode(CENTER);
+        ellipseMode(CENTER);
+        if (mouseIsPressed) {
+            ellipse(mouseX, mouseY, options.size, options.size);
+        }
+        if (imageFromModel) {
+            image(imageFromModel, width / 2, 0, width / 2, height);
+        }
+    }
+
+    // We need to specify which function to call each time we receive an output from the model
+    model.output(dataReceived);
+
+    // This function is called when we receive data from the model
+    function dataReceived(data) {
+        console.log('[styleTransfer] Received an image');
+        imageFromModel = loadImage(data.stylizedImage);
+        sendData();
+    }
+
+    // Send the current video image to the model
+    function sendData() {
+        loadPixels();
+        const img = get(0, 0, width / 2, height);
+        const contentImage = img.canvas.toDataURL("image/jpeg");
+        model.input({ contentImage });
+    }
+
+    function keyReleased() {
+        if (keyCode === ENTER) {
+            sendData();
+        } else if (keyCode === UP_ARROW && options.size < 50) {
+            options.size ++
+        } else if (keyCode === DOWN_ARROW && options.size > 0) {
+            options.size --
+        } else if (keyCode === BACKSPACE) {
+            background(33)
+        }
+    }
+    </script>
+</body>
+
+</html>

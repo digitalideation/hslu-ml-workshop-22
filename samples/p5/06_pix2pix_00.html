@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="js/p5.min.js"></script>
+    <script src="js/p5.dom.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+    <!-- Source -->
+    <script>
+    // Variables
+    const RUNWAY_HOST = 'http://localhost';
+    const PIX2PIX_PORT = 3000;
+    const models = {};
+    models['pix2pix'] = new RunwayModel(RUNWAY_HOST + ':' + PIX2PIX_PORT);
+    let pix2pixImage;
+    // Drawing variables
+    let colors = ['#0000FF', '#004DFF', '#00A8FF', '#00FFFF', '#A7FF46', '#FF5400', '#FF0000', '#FFFF00', '#AC0000'];
+    let x, y, w, h;
+    // GUI
+    var options = {
+        colorMode: 1,
+        shape: 'ellipse'
+    }
+
+    window.onload = function() {
+        let gui = new dat.GUI()
+        gui.add(options, 'colorMode', 1, 9).step(1).listen()
+        gui.add(options, 'shape', ['ellipse', 'rect']).listen()
+    }
+
+    // Default P5 setup function
+    function setup() {
+        canvas = createCanvas(windowWidth, windowHeight);
+        background('#0000AD');
+    }
+
+    // Default P5 draw loop function 
+    function draw() {
+        fill(colors[options.colorMode-1]);
+        noStroke();
+        if (mouseIsPressed)
+            if (options.shape === 'rect')
+                rect(x,y,w,h);
+            else
+                ellipse(x,y,w,h);
+        if (pix2pixImage)
+            image(pix2pixImage, width / 2, 0, width / 2, height);
+    }
+
+    // We need to specify which function to call each time we receive an output from the model
+    models['pix2pix'].output(dataReceivedFromPix2pix);
+
+    // This function is called when we receive data from the model
+    function dataReceivedFromPix2pix(data) {
+        pix2pixImage = loadImage(data.image);
+        console.log('[pix2pix] Received an image');
+        sendDataToPix2pix();
+    }
+
+    // Send the current video image to the model
+    function sendDataToPix2pix() {
+        loadPixels();
+        const img = get(0, 0, width / 2, height);
+        const image = img.canvas.toDataURL("image/jpeg");
+        models['pix2pix'].input({ image });
+    }
+
+    function keyReleased() {
+        if (keyCode === ENTER)
+            sendDataToPix2pix();
+        else if (keyCode === UP_ARROW && options.colorMode < 9)
+            options.colorMode++;
+        else if (keyCode === DOWN_ARROW && options.colorMode > 0)
+            options.colorMode--;
+        else if (key === 'e')
+            options.shape = 'ellipse';
+        else if (key === 'r')
+            options.shape = 'rect';
+        else if (keyCode === BACKSPACE)
+            background('#0000AD');
+    }
+
+    function mousePressed() {
+        x = mouseX
+        y = mouseY
+        w = 0
+        h = 0
+    }
+
+    function mouseDragged() {
+        w = abs(mouseX - x)
+        h = abs(mouseY - y)
+    }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="js/p5.min.js"></script>
+    <script src="js/p5.dom.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+    <!-- Source -->
+    <script>
+    // Variables
+    const RUNWAY_HOST = 'http://localhost';
+    const POSENET_PORT = 3000;
+    const IM2TXT_PORT = 3001;
+    const models = {};
+    models['poseNet'] = new RunwayModel(RUNWAY_HOST + ":" + POSENET_PORT);
+    models['im2txt'] = new RunwayModel(RUNWAY_HOST + ":" + IM2TXT_PORT);
+    let poseNetResults, im2txtCaption;
+    let video;
+
+    setInterval(sendDataToIm2txt, 5000);
+
+    // Default P5 setup function
+    function setup() {
+        canvas = createCanvas(windowWidth, windowHeight);
+        video = createCapture(VIDEO);
+        video.hide();
+    }
+
+    // Default P5 draw loop function 
+    function draw() {
+        background(0);
+        const w = width;
+        const h = height;
+        image(video, 0, 0, w, h);
+        if (im2txtCaption && poseNetResults) {
+            // drawPoses(poseNetResults.poses, w, h);
+            // Follow this link to get the index of the differente body parts
+            // https://github.com/tensorflow/tfjs-models/tree/master/posenet#keypoints
+            const leftWrist = poseNetResults.poses[0][9];
+            const rightWrist = poseNetResults.poses[0][10];
+            const point1 = [leftWrist[0] * w, leftWrist[1] * h];
+            const point2 = [rightWrist[0] * w, rightWrist[1] * h];
+            drawInteractiveText(im2txtCaption, point1, point2);
+        }
+    }
+
+    // Draw interactive text
+    function drawInteractiveText(txt, point1, point2) {
+        const dx = point1[0] - point2[0];
+        const dy = point1[1] - point2[1];
+        const x = point2[0] + dx / 2;
+        const y = point2[1] + dy / 2;
+        const dist = sqrt(pow(dx, 2) + pow(dy, 2));
+        const angle = atan2(dy, dx);
+        const size = round(dist / 10);
+        const spacing = size * 1.2;
+        const lines = utils.splitTextToLines(txt, round(dist / 10));
+        for (var i = 0; i < lines.length; i++) {
+            push()
+            translate(x, y + (i * spacing) - lines.length / 2 * spacing);
+            rotate(angle);
+            drawText(lines[i], 0, 0, size);
+            pop()
+        }
+    }
+
+    // Draw text
+    function drawText(txt, x, y, size) {
+        if (txt) {
+            textSize(size);
+            rectMode(CENTER);
+            const w = textWidth(txt);
+            const h = size;
+            fill(0, 200);
+            rect(x, y, w, h);
+            fill(255);
+            textAlign(CENTER, CENTER);
+            text(txt, x, y);
+        }
+    }
+
+    // Draw all the poses. If an array is passed as `parts` 
+    // the function will only draw the id parts in that array
+    // https://github.com/tensorflow/tfjs-models/tree/master/posenet#keypoints
+    function drawPoses(poses, w, h, parts) {
+        for (const pose of poses) {
+            drawPose(pose, w, h, parts);
+        }
+    }
+
+    // Draw individual pose.
+    function drawPose(keypoints, w, h, parts) {
+        for (let i = 0; i < keypoints.length; i++) {
+            if (!parts || parts.includes(i)) {
+                circle(keypoints[i][0] * w, keypoints[i][1] * h, 10);
+            }
+        }
+    }
+
+    // We need to specify which function to call each time we receive an output from the models
+    models['poseNet'].output(dataReceivedFromPoseNet);
+    models['im2txt'].output(dataReceivedFromIm2txt);
+
+    // This function is called when we receive data from the PoseNet model
+    function dataReceivedFromPoseNet(data) {
+        poseNetResults = data;
+        console.log(`[PoseNet] ${poseNetResults.poses.length} posers 🕺 detected`);
+        sendDataToPoseNet();
+    }
+
+    // Send the current video image to the posenet model
+    function sendDataToPoseNet() {
+        video.loadPixels();
+        const img = video.get();
+        const image = img.canvas.toDataURL("image/jpeg");
+        models['poseNet'].input({ image });
+    }
+
+    // This function is called when we receive data from the Im2txt model
+    function dataReceivedFromIm2txt(data) {
+        console.log(data);
+        im2txtCaption = data.caption.slice(0, -1);
+        console.log(`[im2txt] ${im2txtCaption}`);
+    }
+
+    // Send the current video image to the Im2txt model
+    function sendDataToIm2txt() {
+        video.loadPixels();
+        const img = video.get();
+        const image = img.canvas.toDataURL("image/jpeg");
+        models['im2txt'].input({ image });
+    }
+
+    function keyReleased() {
+        if (keyCode === ENTER) {
+            sendDataToPoseNet();
+        } else if (key === 't') {
+            sendDataToIm2txt();
+        }
+    }
+    </script>
+</body>
+
+</html>
