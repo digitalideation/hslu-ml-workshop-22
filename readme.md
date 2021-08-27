@@ -1,16 +1,9 @@
-![di logo](https://raw.githubusercontent.com/digitalideation/hslu-ml-workshop/master/docs/assets/images/di-logo-small.jpg "di logo")
-
-
 # HSLU AI Autumn session :fallen_leaf:
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/webslides/webslides.svg?style=social)](https://twitter.com/digideation)
 
-Main repository for the HSLU ML session @digitalideation.
-
-All the info regarding the workshop as well as direct links to learning materials (slides, notebooks, examples, etc... ) are accessible via the github pages for this repository:
-
-https://digitalideation.github.io/hslu-ml-workshop/
+[★★★ This repository is published here ★★★](https://digitalideation.github.io/hslu-ml-workshop/)
 
 
 ## Schedule
@@ -41,25 +34,7 @@ https://digitalideation.github.io/hslu-ml-workshop/
 1. [Slides for the ML workshop](https://digitalideation.github.io/hslu-ml-workshop/slides/)
 
 #### Samples
-The sample folder contains different examples:
-
-```
-samples/p5
-├── 00_p5js.html
-├── 00_runwayml.html
-├── 01_styletransfer_00.html
-├── 01_styletransfer_01.html
-├── 01_styletransfer_02.html
-├── 02_mobilenet_00.html
-├── 03_cocossd_00.html
-├── 04_posenet_00.html
-├── 04_posenet_im2txt_00.html
-├── 05_im2txt_attngan_00.html
-├── 06_pix2pix_00.html
-├── assets
-├── css
-└── js
-```
+The sample folder contains different examples.
 
 
 ## Tools
