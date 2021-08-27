@@ -8,7 +8,7 @@
 
 ## Schedule
 
-#### 07.09
+#### 13.09
 * 9am - Start :smiley_cat:
 * 9am - Introduction 
 * 10am - Software setup + intro to tools
@@ -20,7 +20,7 @@
 * 1pm - Experiments
 * 5pm - End
 
-#### 08.09
+#### 14.09
 * 9am - Experiments
 * 12pm - Lunch
 * 1pm - Experiments
