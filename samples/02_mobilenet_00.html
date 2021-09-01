@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.7/build/dat.gui.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+
+    <!-- Source -->
+    <script>
+
+        // Variables
+        const RUNWAY_HOST = 'http://localhost';
+        const MOBILENET_PORT = 3000;
+        const model = new RunwayModel(RUNWAY_HOST + ":" + MOBILENET_PORT);
+        let mobileNetCategory;
+        let video;
+
+        // Default P5 setup function
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            video = createCapture(VIDEO);
+            video.hide();
+        }
+
+        // Draw loop
+        function draw() {
+            background(0);
+            image(video, 0, 0, width, height);
+            drawText(mobileNetCategory, 20);
+        };
+
+        // Draw the text
+        function drawText(txt, size) {
+            if (txt) {
+                textSize(size); // Text height
+                const p = 10; // Padding
+                const w = textWidth(txt); // Width
+                const h = size; // Height y
+                // Draw rectangular background
+                fill(255, 0, 0, 150);
+                noStroke();
+                rectMode(CENTER);
+                rect(width / 2, height / 2, w + p * 2, h + p);
+                // Draw text
+                fill(255);
+                textAlign(CENTER, CENTER);
+                text(txt, width / 2, height / 2);
+            }
+        }
+
+        // We need to specify which function to call each time we receive an output from the model
+        model.output(dataReceived);
+
+        // This function is called when we receive data from the model
+        function dataReceived(data) {
+            console.log(`[mobileNet] ${mobileNetCategory}`);
+            mobileNetCategory = data.results[0].className || null;
+            sendData();
+        }
+
+        // Send the current video image to the model
+        function sendData() {
+            video.loadPixels();
+            const img = video.get();
+            const image = img.canvas.toDataURL("image/jpeg");
+            model.input({ image });
+        }
+
+        function keyReleased() {
+            if (keyCode === ENTER) {
+                sendData();
+            }
+        }
+
+    </script>
+</body>
+
+</html>

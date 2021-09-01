@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Includes -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.7/build/dat.gui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@runwayml/hosted-models@0.3.0/dist/hosted-models.js"></script>
+
+    <!-- Source -->
+    <script>
+
+        // Variables
+        const URL = "https://picasso-eb400a79.hosted-models.runwayml.cloud/v1/";
+        const TOKEN = "VKZX0gyPnLG4x7wLAuTSoQ==";
+        const model = new rw.HostedModel({
+            url: URL,
+            token: TOKEN,
+        });
+        let imageFromModel;
+
+        // Default P5 setup function
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            video = createCapture(VIDEO);
+            video.hide();
+        }
+
+        // Default P5 draw loop function 
+        function draw() {
+            image(video, 0, 0, width / 2, height);
+            if (imageFromModel) {
+                image(imageFromModel, width / 2, 0, width / 2, height);
+            }
+        }
+
+        // Send the current video image to the model
+        function sendData() {
+            video.loadPixels();
+            const img = video.get();
+            const contentImage = img.canvas.toDataURL("image/jpeg");
+            const inputs = {
+                "contentImage": contentImage
+            }
+            model.query(inputs).then( outputs => {
+                console.log(outputs);
+                const { stylizedImage } = outputs;
+                imageFromModel = loadImage(stylizedImage);
+            });
+        }
+
+        function keyReleased() {
+            if (keyCode === ENTER) {
+                sendData();
+            } else if (key === 'i') {
+                model.info().then(info => console.log(info));
+            }
+        }
+
+</script>
+</body>
+
+</html>

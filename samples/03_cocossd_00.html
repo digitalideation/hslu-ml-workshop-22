@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.7/build/dat.gui.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+
+    <!-- Source -->
+    <script>
+
+        // Variables
+        const RUNWAY_HOST = 'http://localhost';
+        const COCOSSD_PORT = 3000;
+        const model = new RunwayModel(RUNWAY_HOST + ":" + COCOSSD_PORT);
+        let cocoSSDResults;
+        let video;
+
+        // Default P5 setup function
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            video = createCapture(VIDEO);
+            video.hide();
+        }
+
+        // Default P5 draw loop function 
+        function draw() {
+            image(video, 0, 0);
+            if (cocoSSDResults) {
+                drawClasses(cocoSSDResults, video.width, video.height);
+            }
+        }
+
+        // Draw classes
+        function drawClasses(results, w, h) {
+            const boxes = results.boxes;
+            const labels = results.labels;
+            for (var i = 0; i < boxes.length; i++) {
+                // Label of the class
+                const label = labels[i];
+                // Box holds the coordinate of the bounding box
+                const box = boxes[i];
+                const box_x = box[0] * w;
+                const box_y = box[1] * h;
+                const box_w = (box[2] - box[0]) * w;
+                const box_h = (box[3] - box[1]) * h;
+                push(); // Start a new drawing state
+                translate(box_x, box_y);
+                drawBoundingBox(box_w, box_h);
+                drawText(label, 20);
+                pop(); // Restore original state
+            }
+        }
+
+        // Draw the text
+        function drawText(txt, size) {
+            if (txt) {
+                textSize(size); // Text height
+                const p = 10; // Padding
+                const w = textWidth(txt); // Width
+                const h = size; // Height
+                // Draw rectangular background
+                fill(0, 150);
+                noStroke();
+                rect(0, 0, w + p, h + p);
+                // Draw text
+                fill(255);
+                text(txt, p / 2, h / 2 + p);
+            }
+        }
+
+        // Draw bounding box
+        function drawBoundingBox(w, h) {
+            noFill();
+            stroke(0);
+            rect(0, 0, w, h);
+        }
+
+        // We need to specify which function to call each time we receive an output from the model
+        model.output(dataReceived);
+
+        // This function is called when we receive data from the model
+        function dataReceived(data) {
+            cocoSSDResults = data;
+            console.log(`[cocoSSD] ${cocoSSDResults.boxes.length} objects detected`);
+            sendData();
+        }
+
+        // Send the current video image to the model
+        function sendData() {
+            video.loadPixels();
+            const img = video.get();
+            const image = utils.encodeImage(img);
+            model.input({ image });
+        }
+
+        function keyReleased() {
+            if (keyCode === ENTER) {
+                sendData();
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <!-- Includes -->
+    <!-- Libs -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.7/build/dat.gui.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <!-- Tools -->
+    <script src="js/RunwayModel.js"></script>
+    <script src="js/utils.js"></script>
+
+    <!-- Source -->
+    <script>
+
+        // Variables
+        const RUNWAY_HOST = 'http://localhost';
+        const IM2TXT_PORT = 3000;
+        const ATTNGAN_PORT = 3001;
+        const models = {};
+        models['attnGAN'] = new RunwayModel(RUNWAY_HOST + ":" + ATTNGAN_PORT);
+        models['im2txt'] = new RunwayModel(RUNWAY_HOST + ":" + IM2TXT_PORT);
+        let attnGANImg, im2txtCaption;
+        let video;
+
+        // Default P5 setup function
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            video = createCapture(VIDEO);
+            video.hide();
+        }
+
+        // Default P5 draw loop function 
+        function draw() {
+            if (attnGANImg) {
+                image(attnGANImg, 0, 0, width, height);
+            }
+            image(video, 20, 20, video.width / 2, video.height / 2);
+            if (im2txtCaption) {
+                utils.drawText(im2txtCaption, 22, video.height / 2 + 40, 20);
+            }
+        }
+
+        // We need to specify which function to call each time we receive an output from the models
+        models['im2txt'].output(dataReceivedFromIm2txt);
+        models['attnGAN'].output(dataReceivedFromAttnGAN);
+
+        // This function is called when we receive data from the Im2txt model
+        function dataReceivedFromAttnGAN(data) {
+            console.log('[attnGAN] Received an image');
+            attnGANImg = loadImage(data.result);
+            sendDataToIm2txt();
+        }
+
+        // Send the current video image to the Im2txt model
+        function sendDataToAttnGAN() {
+            const caption = im2txtCaption;
+            models['attnGAN'].input({ caption });
+        }
+
+        // This function is called when we receive data from the Im2txt model
+        function dataReceivedFromIm2txt(data) {
+            im2txtCaption = data.caption;
+            console.log(`[im2txt] ${im2txtCaption}`);
+            sendDataToAttnGAN();
+        }
+
+        // Send the current video image to the Im2txt model
+        function sendDataToIm2txt() {
+            video.loadPixels();
+            const img = video.get();
+            const image = img.canvas.toDataURL("image/jpeg");
+            models['im2txt'].input({ image });
+        }
+
+        function keyReleased() {
+            if (keyCode === ENTER) {
+                sendDataToIm2txt();
+            }
+        }
+    </script>
+</body>
+
+</html>
