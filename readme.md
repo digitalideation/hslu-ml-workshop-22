@@ -102,13 +102,16 @@ We will use [__p5.js__ ](https://p5js.org/) for the front end. It’s a high lev
 ## Repository structure
 
 ```
-├── docs
-│   ├── _layouts
-│   ├── assets            (img, etc.. for content)
-│   │   ├── css
-│   │   └── images
-│   └── slides            (slides of the presentations)
-│       ├── demos
-│       └── static        (img, etc.. for slides)
-└── samples               (code sample)
+├── _layouts
+├── assets            (img, etc.. for github pages)
+│   ├── css
+│   └── images
+├── samples           (code sample)
+│   ├── assets
+│   ├── css
+│   ├── js
+│   └── p5
+└── slides            (slides of the presentations)
+    ├── demos
+    └── static        (img, etc.. for slides)
 ```
