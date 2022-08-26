@@ -3,29 +3,12 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/webslides/webslides.svg?style=social)](https://twitter.com/digideation)
 
-[★★★ This repository is published here ★★★](https://digitalideation.github.io/hslu-ml-workshop/)
+[★★★ This repository is published here ★★★](https://digitalideation.github.io/hslu-ml-workshop-22/)
 
 
 ## Schedule
 
-#### 13.09
-* 9am - Start :smiley_cat:
-* 9am - Introduction 
-* 10am - Software setup + intro to tools
-  * Editors + local server
-  * Runway
-  * Runway + html 
-* 11am - Experiments
-* 12pm - Lunch
-* 1pm - Experiments
-* 5pm - End
-
-#### 14.09
-* 9am - Experiments
-* 12pm - Lunch
-* 1pm - Experiments
-* 4pm - Showcase
-* 5pm - End :crying_cat_face:
+TBA
 
 
 ## Content
