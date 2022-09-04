@@ -1,4 +1,4 @@
-# HSLU AI Autumn session :fallen_leaf:
+# Artificial Intelligence - Artistic Practices and Critical Perspectives
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/webslides/webslides.svg?style=social)](https://twitter.com/digideation)
@@ -8,31 +8,43 @@
 
 ## Schedule
 
-TBA
+### 07.09
+* 9am - Start :smiley_cat:
+* 9am - Introduction 
+* 10am - Software setup + intro to tools
+  * Editors + local server
+  * Runway
+  * Runway + html 
+* 11am - Experiments
+* 12pm - Lunch
+
+### 08.09
+* 9am - Experiments
+* 12pm - Lunch
 
 
 ## Content
 
-#### Slides
+### Slides
 1. [Slides for the ML workshop](https://digitalideation.github.io/hslu-ml-workshop/slides/)
 
-#### Samples
+### Samples
 The sample folder contains different examples.
 
 
 ## Tools
 
-#### System requirement
+### System requirement
 _"Modern"_ machine with decent hardware and sufficient space on the hard drive (20+ Gb is good)
 
-#### Code editor
+### Code editor
 If you don’t have a code editor, please install one. Some suggestions (in no particular order)
 - [Sublime Text](https://www.sublimetext.com)
 - [Visual Studio](https://code.visualstudio.com)
 - [Atom](https://atom.io)
 - [Brackets](http://brackets.io/)
 
-#### Web server
+### Web server
 We need a simple web server to interact with the models locally:
 - If you're using __Mac OS__ or __Linux__ The easiest is to use Python's [SimpleHTTPServer](https://github.com/lmccart/itp-creative-js/wiki/SimpleHTTPServer). In Terminal type:
   * ```python --version``` to get your python version then
@@ -44,10 +56,10 @@ We need a simple web server to interact with the models locally:
 - If you have node.js/npm installed you can use _live-server_: `npm install -g live-server`
 - [Other options](https://github.com/processing/p5.js/wiki/Local-server)
 
-#### Runway
+### Runway
 We are using [__Runway__](https://runwayapp.ai), a tool which makes deploying ML models easy, as middleware to build the interactive experiments. All participants to the workshop should have received an invitations with some GPU credits :tada:. For those who have not installed it prior to the workshop, we will go through the [installation process](https://docs.runwayml.com/#/getting-started/installation) together.
 
-#### P5.js
+### P5.js
 We will use [__p5.js__ ](https://p5js.org/) for the front end. It’s a high level creative programming framework with an [intuitive API](https://p5js.org/reference/). If some of you have used Processing before you should be confortable using p5.js. To get familiar with p5 you can go through this list of tutorials / guides:
 - [JS for cats](http://jsforcats.com)
 - [Matt DesLauriers JS guide](https://github.com/mattdesl/workshop-data-artwork#javascript-guides)
@@ -57,7 +69,7 @@ We will use [__p5.js__ ](https://p5js.org/) for the front end. It’s a high lev
 - [Shiffman's Foundation of programming in js](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA)
 - [P5js reference](https://p5js.org/reference/)
 
-#### Docker
+### Docker
 [__Docker__](https://www.docker.com/) will eventually be needed in order to deploy some of the models locally. This will give us some flexibility when running experiments on our machine. A guide to getting started is [available](https://docs.runwayml.com/#/getting-started/installation?id=download-docker). For linux users, those [post install steps](https://docs.docker.com/install/linux/linux-postinstall/) could be useful as well.
 
 > Docker for Windows requires Microsoft Hyper-V, which is supported only in the Pro, Enterprise or Education editions of Windows. If you don't have a Pro, Enterprise or Education Windows edition you will not be able to install Docker and you will be able to only run some models using cloud GPU.
